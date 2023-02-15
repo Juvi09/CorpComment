@@ -215,6 +215,12 @@ const clickHandler2 = event => {
 
           // extract company name 
         const companyNameFromFeedbackItem = childNodes.querySelector('.feedback__company').textContent.toLowerCase().trim();
+
+        // remove feedback item from company names are not equal 
+         if (companyNameFromHashtag !== companyNameFromFeedbackItem) {
+            childNodes.remove();
+         }
+
     });
 };
 
