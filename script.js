@@ -6,6 +6,7 @@ const counterEl = document.querySelector('.counter');
 const formEl = document.querySelector('.form');
 const feedbackListEl = document.querySelector('.feedbacks');
 const submitBtnEl = document.querySelector('.submit-btn');
+const spinnerEl = document.querySelector('.spinner');
 
 // -- COUNTER COMPONENT ---
 const inputHandler = () => {
@@ -113,8 +114,11 @@ fetch('https://bytegrad.com/course-assets/js/1/api/feedbacks')
    .then(data => {
       //console.log(data.feedbacks[7]);
 
+      //remove spinner
+      spinnerEl.remove();
+
       //Iterate over each element in the feedbacks array and render it in the list
-      data.feedbacks.array.forEach(feedbackItem => {
+      data.feedbacks.forEach(feedbackItem => {
               // new feedback item HTML
         const feedbackItemHTML = `
           <li class="feedback">
@@ -137,4 +141,7 @@ fetch('https://bytegrad.com/course-assets/js/1/api/feedbacks')
          feedbackListEl.insertAdjacentHTML('beforeend', feedbackItemHTML);
         
       });
+})
+.catch(error => {
+   feedbackListEl.textContent = `Failed to fetch feedback items. Error message: ${error.message}`;
 });
