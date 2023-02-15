@@ -104,3 +104,37 @@ counterEl.textContent = MAX_CHARS;
 };
 
 formEl.addEventListener('submit', submitHandler);
+
+// -- FEEDBACK LIST COMPONENT --
+fetch('https://bytegrad.com/course-assets/js/1/api/feedbacks')
+   .then(response => {
+       return response.json();
+   })
+   .then(data => {
+      //console.log(data.feedbacks[7]);
+
+      //Iterate over each element in the feedbacks array and render it in the list
+      data.feedbacks.array.forEach(feedbackItem => {
+              // new feedback item HTML
+        const feedbackItemHTML = `
+          <li class="feedback">
+               <button class="upvote">
+                   <i class="fa-solid fa-caret-up upvote__icon"></i>
+                   <span class="upvote__count">${feedbackItem.upvoteCount}</span>
+               </button>
+            <section class="feedback__badge">
+                <p class="feedback__letter">${feedbackItem.badgeLetter}</p>
+            </section>
+            <div class="feedback__content">
+                <p class="feedback__company">${feedbackItem.company}</p>
+                <p class="feedback__text">${feedbackItem.text}</p>
+            </div>
+                <p class="feedback__date">${feedbackItem.daysAgo === 0 ? 'NEW' : `${feedbackItem.daysAgo}d`}</p>
+          </li>
+`;
+
+         // insert new feedback items into list
+         feedbackListEl.insertAdjacentHTML('beforeend', feedbackItemHTML);
+        
+      });
+});
