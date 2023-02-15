@@ -8,6 +8,33 @@ const feedbackListEl = document.querySelector('.feedbacks');
 const submitBtnEl = document.querySelector('.submit-btn');
 const spinnerEl = document.querySelector('.spinner');
 
+const renderFeedbackItem = feedbackItem => {
+  // new feedback item HTML
+  const feedbackItemHTML = `
+<li class="feedback">
+<button class="upvote">
+    <i class="fa-solid fa-caret-up upvote__icon"></i>
+    <span class="upvote__count">${feedbackItem.upvoteCount}</span>
+</button>
+<section class="feedback__badge">
+    <p class="feedback__letter">${feedbackItem.badgeLetter}</p>
+</section>
+<div class="feedback__content">
+    <p class="feedback__company">${feedbackItem.company}</p>
+    <p class="feedback__text">${feedbackItem.text}</p>
+</div>
+<p class="feedback__date">${feedbackItem.daysAgo === 0 ? 'NEW' : `${feedbackItem.daysAgo}d`}</p>
+</li>
+
+`;
+
+// insert new feedback items into list
+feedbackListEl.insertAdjacentHTML('beforeend', feedbackItemHTML);
+
+
+};
+
+
 // -- COUNTER COMPONENT ---
 const inputHandler = () => {
     //Determine maximum number of characters.
@@ -67,27 +94,19 @@ const badgeLetter = company.substring(0, 1).toUpperCase();
 const upvoteCount = 0;
 const daysAgo = 0;
 
-// new feedback item HTML
-const feedbackItemHTML = `
-<li class="feedback">
-<button class="upvote">
-    <i class="fa-solid fa-caret-up upvote__icon"></i>
-    <span class="upvote__count">${upvoteCount}</span>
-</button>
-<section class="feedback__badge">
-    <p class="feedback__letter">${badgeLetter}</p>
-</section>
-<div class="feedback__content">
-    <p class="feedback__company">${company}</p>
-    <p class="feedback__text">${text}</p>
-</div>
-<p class="feedback__date">${daysAgo === 0 ? 'NEW' : `${daysAgo}d`}</p>
-</li>
 
-`;
+//create feedback item object
+const feedbackItem = {
+    upvoteCount: upvoteCount,
+    company: company,
+    badgeLetter: badgeLetter,
+    daysAgo: daysAgo,
+    text: text
 
-// insert new feedback items into list
-feedbackListEl.insertAdjacentHTML('beforeend', feedbackItemHTML);
+};
+
+// render feeback item
+renderFeedbackItem(feedbackItem);
 
 //Clear textarea
 textareaEl.value = '';
