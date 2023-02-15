@@ -109,8 +109,19 @@ renderFeedbackItem(feedbackItem);
 //send feedback items to server
 fetch('https://bytegrad.com/course-assets/js/1/api/feedbacks', {
   method: 'POST',
-  body: feedbackItem
-})
+  body: JSON.stringify(feedbackItem),
+  headers: {
+     Accept: 'application/json',
+    'Content-Type': 'application/json'
+  }
+}).then(response => {
+   if(response.ok){
+      console.log('Something went wrong!');
+      return;
+   } 
+    console.log('Successfully submitted.');
+
+}).catch(error => console.log(error));
 
 
 //Clear textarea
