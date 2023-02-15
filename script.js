@@ -210,11 +210,12 @@ const clickHandler2 = event => {
 
     //iterate over each feedback item in the list
     feedbackListEl.childNodes.forEach(childNodes => {
-          
+          //stop this iteration if it is a text node
+          if (childNodes.nodeType === 3) return;
+
+          // extract company name 
+        const companyNameFromFeedbackItem = childNodes.querySelector('.feedback__company').textContent.toLowerCase().trim();
     });
-
-   console.log(clickedEl);
-
 };
 
 hashtagListEl.addEventListener('click', clickHandler2);
