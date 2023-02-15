@@ -1,5 +1,6 @@
 // -- GLOBAL --
 const MAX_CHARS = 150;
+const BASE_API_URL = 'https://bytegrad.com/course-assets/js/1/api/feedbacks';
 
 const textareaEl = document.querySelector('.form__textarea');
 const counterEl = document.querySelector('.counter');
@@ -7,6 +8,7 @@ const formEl = document.querySelector('.form');
 const feedbackListEl = document.querySelector('.feedbacks');
 const submitBtnEl = document.querySelector('.submit-btn');
 const spinnerEl = document.querySelector('.spinner');
+const hashtagListEl = document.querySelector('.hashtags');
 
 const renderFeedbackItem = feedbackItem => {
   // new feedback item HTML
@@ -107,7 +109,7 @@ const feedbackItem = {
 renderFeedbackItem(feedbackItem);
 
 //send feedback items to server
-fetch('https://bytegrad.com/course-assets/js/1/api/feedbacks', {
+fetch(`${BASE_API_URL}/feedbacks`, {
   method: 'POST',
   body: JSON.stringify(feedbackItem),
   headers: {
@@ -115,7 +117,7 @@ fetch('https://bytegrad.com/course-assets/js/1/api/feedbacks', {
     'Content-Type': 'application/json'
   }
 }).then(response => {
-   if(response.ok){
+   if(!response.ok){
       console.log('Something went wrong!');
       return;
    } 
@@ -135,14 +137,47 @@ submitBtnEl.blur();
 //Reset counter
 counterEl.textContent = MAX_CHARS;
 
-
-  
 };
 
 formEl.addEventListener('submit', submitHandler);
 
+
 // -- FEEDBACK LIST COMPONENT --
-fetch('https://bytegrad.com/course-assets/js/1/api/feedbacks')
+const clickHandler = event => {
+     // get clicked HTML element
+     const clickedEl = event.target;
+
+     //determine if user intended to upvote or expand
+     const upvoteIntention = clickedEl.className.includes('upvote');
+    
+     if(upvoteIntention){
+        // get the closest upvote button
+        const upvoteBtnEl = clickedEl.closest('.upvote');
+
+        // disable upvote button (prevent double- clicks)
+        upvoteBtnEl.disabled = true;
+
+        // select the upvote count element within the upvote button
+        const upvoteCountEl = upvoteBtnEl.querySelector('.upvote__count');
+
+        // get currently displayed upvote count as number (+)
+        let upvoteCount = +upvoteCountEl.textContent; 
+
+        //set upvote count incremented by 1
+        upvoteCountEl.textContent = ++upvoteCount;
+
+     } else {
+        // Expand the clicked feedback item
+        clickedEl.closest('.feedback').classList.toggle('feedback--expand');
+     }
+};
+
+
+feedbackListEl.addEventListener('click', clickHandler)
+
+
+// -- FEEDBACK LIST COMPONENT --
+fetch(`${BASE_API_URL}/feedbacks`)
    .then(response => {
        return response.json();
    })
@@ -160,3 +195,26 @@ fetch('https://bytegrad.com/course-assets/js/1/api/feedbacks')
 .catch(error => {
    feedbackListEl.textContent = `Failed to fetch feedback items. Error message: ${error.message}`;
 });
+
+
+// -- HASHTAG LIST COMPONENT --
+const clickHandler2 = event => {
+   // get the clicked element
+   const clickedEl = event.target;
+   
+   // stop function if click happened in List, but outside button
+     if (clickedEl.className === 'hashtags') return;
+
+   // extract the company name 
+    const companyNameFromHashtag = clickedEl.textContent.substring(1).toLowerCase().trim();
+
+    //iterate over each feedback item in the list
+    feedbackListEl.childNodes.forEach(childNodes => {
+          
+    });
+
+   console.log(clickedEl);
+
+};
+
+hashtagListEl.addEventListener('click', clickHandler2);
