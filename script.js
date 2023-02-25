@@ -198,30 +198,33 @@ fetch(`${BASE_API_URL}/feedbacks`)
 
 
 // -- HASHTAG LIST COMPONENT --
-const clickHandler2 = event => {
-   // get the clicked element
-   const clickedEl = event.target;
-   
-   // stop function if click happened in List, but outside button
-     if (clickedEl.className === 'hashtags') return;
+{() => {
+    const clickHandler2 = event => {
+        // get the clicked element
+        const clickedEl = event.target;
+        
+        // stop function if click happened in List, but outside button
+          if (clickedEl.className === 'hashtags') return;
+     
+        // extract the company name 
+         const companyNameFromHashtag = clickedEl.textContent.substring(1).toLowerCase().trim();
+     
+         //iterate over each feedback item in the list
+         feedbackListEl.childNodes.forEach(childNodes => {
+               //stop this iteration if it is a text node
+               if (childNodes.nodeType === 3) return;
+     
+               // extract company name 
+             const companyNameFromFeedbackItem = childNodes.querySelector('.feedback__company').textContent.toLowerCase().trim();
+     
+             // remove feedback item from company names are not equal 
+              if (companyNameFromHashtag !== companyNameFromFeedbackItem) {
+                 childNodes.remove();
+              }
+     
+         });
+     };
+     
+     hashtagListEl.addEventListener('click', clickHandler2);
+}};
 
-   // extract the company name 
-    const companyNameFromHashtag = clickedEl.textContent.substring(1).toLowerCase().trim();
-
-    //iterate over each feedback item in the list
-    feedbackListEl.childNodes.forEach(childNodes => {
-          //stop this iteration if it is a text node
-          if (childNodes.nodeType === 3) return;
-
-          // extract company name 
-        const companyNameFromFeedbackItem = childNodes.querySelector('.feedback__company').textContent.toLowerCase().trim();
-
-        // remove feedback item from company names are not equal 
-         if (companyNameFromHashtag !== companyNameFromFeedbackItem) {
-            childNodes.remove();
-         }
-
-    });
-};
-
-hashtagListEl.addEventListener('click', clickHandler2);
